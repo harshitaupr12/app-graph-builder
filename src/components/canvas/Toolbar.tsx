@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { ZoomIn, ZoomOut, Maximize2, Minimize2, Layout, RefreshCw } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize2, Layout, RefreshCw } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 
 export function Toolbar() {
-  const { zoomIn, zoomOut, fitView, setCenter } = useReactFlow();
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
 
   const handleReset = () => {
     fitView({ padding: 0.2, duration: 800 });
@@ -43,7 +43,6 @@ function ToolButton({
     >
       <Icon className="w-4 h-4 text-gray-700 dark:text-gray-300" />
       
-      {/* Tooltip */}
       <div className="absolute bottom-full mb-2 px-2 py-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
         {tooltip}
       </div>

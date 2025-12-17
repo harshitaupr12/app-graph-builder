@@ -3,27 +3,17 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import { ServiceNodeData } from '../../types';
 
-export const ServiceNode = memo(({ data, selected }: NodeProps<ServiceNodeData>) => {
-  // Safe defaults
-  const label = data?.label || 'Service';
-  const status = data?.status || 'healthy';
-  const cpu = data?.cpu || 0;
-  const memory = data?.memory || 0;
-  const requests = data?.requests || 0;
+export const ServiceNode = memo(({ data, selected }: NodeProps<{ data: ServiceNodeData }>) => {
+  const label = data.label || 'Service';
+  const status = data.status || 'healthy';
+  const cpu = data.cpu || 0;
+  const memory = data.memory || 0;
+  const requests = data.requests || 0;
 
-  const statusConfig = {
-    healthy: {
-      dot: 'bg-emerald-400',
-      glow: 'shadow-emerald-400/20',
-    },
-    degraded: {
-      dot: 'bg-amber-400',
-      glow: 'shadow-amber-400/20',
-    },
-    down: {
-      dot: 'bg-red-400',
-      glow: 'shadow-red-400/20',
-    },
+  const statusConfig: Record<string, { dot: string; glow: string }> = {
+    healthy: { dot: 'bg-emerald-400', glow: 'shadow-emerald-400/20' },
+    degraded: { dot: 'bg-amber-400', glow: 'shadow-amber-400/20' },
+    down: { dot: 'bg-red-400', glow: 'shadow-red-400/20' },
   };
 
   const config = statusConfig[status];
@@ -55,7 +45,6 @@ export const ServiceNode = memo(({ data, selected }: NodeProps<ServiceNodeData>)
           }
         `}
       >
-        {/* Header */}
         <div className="relative px-4 py-3 bg-gradient-to-r from-gray-50/50 to-transparent dark:from-gray-800/50 border-b border-gray-200/50 dark:border-gray-700/50">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
@@ -65,9 +54,7 @@ export const ServiceNode = memo(({ data, selected }: NodeProps<ServiceNodeData>)
           </div>
         </div>
 
-        {/* Stats */}
         <div className="px-4 py-3 space-y-2.5">
-          {/* CPU */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-gray-600 dark:text-gray-400">CPU</span>
@@ -83,7 +70,6 @@ export const ServiceNode = memo(({ data, selected }: NodeProps<ServiceNodeData>)
             </div>
           </div>
 
-          {/* Memory */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Memory</span>
@@ -99,7 +85,6 @@ export const ServiceNode = memo(({ data, selected }: NodeProps<ServiceNodeData>)
             </div>
           </div>
 
-          {/* Requests */}
           <div className="pt-1 flex items-center justify-between">
             <span className="text-xs text-gray-500 dark:text-gray-500">Requests/s</span>
             <span className="text-xs font-mono font-medium text-gray-900 dark:text-gray-100">
