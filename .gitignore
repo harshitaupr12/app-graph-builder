@@ -33,3 +33,4 @@ pnpm-debug.log*
 # Temporary
 .cache/
 *.log
+.vercel
