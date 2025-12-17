@@ -6,7 +6,7 @@ export interface Application {
   description: string;
 }
 
-export interface ServiceNodeData {
+export interface ServiceNodeData extends Record<string, unknown> {
   label: string;
   status: 'healthy' | 'degraded' | 'down';
   cpu: number;
@@ -17,6 +17,6 @@ export interface ServiceNodeData {
 export type ServiceNode = Node<ServiceNodeData, 'service'>;
 
 export interface GraphData {
-  nodes: ServiceNode[];
+  nodes: Node<ServiceNodeData>[];
   edges: Edge[];
 }

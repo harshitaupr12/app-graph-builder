@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ReactFlow, Background, Controls, useNodesState, useEdgesState, NodeMouseHandler, addEdge, Connection } from '@xyflow/react';
+import { ReactFlow, Background, Controls, useNodesState, useEdgesState, NodeMouseHandler, addEdge, Connection, Node, Edge } from '@xyflow/react';
 import { motion } from 'framer-motion';
-import { Layers, Plus } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import { ServiceNode } from './ServiceNode';
 import { CustomEdge } from './CustomEdge';
 import { Toolbar } from './Toolbar';
@@ -21,8 +21,8 @@ const edgeTypes = {
 
 export function Canvas() {
   const selectedAppId = useStore((state) => state.selectedAppId);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node<ServiceNodeData>>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedNode, setSelectedNode] = useState<{ id: string; data: ServiceNodeData } | null>(null);
 
   const { data: graphData, isLoading } = useQuery<GraphData>({
@@ -49,7 +49,7 @@ export function Canvas() {
     }
   }, [graphData, setNodes, setEdges]);
 
-  const onNodeClick: NodeMouseHandler = useCallback((event, node) => {
+  const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
     setSelectedNode({ id: node.id, data: node.data as ServiceNodeData });
   }, []);
 
@@ -66,19 +66,19 @@ export function Canvas() {
         animated: true,
         style: { stroke: '#94a3b8', strokeWidth: 2 },
       };
-      setEdges((eds) => addEdge(edge, eds));
+      setEdges((eds) => addEdge(edge as Edge, eds));
     },
     [setEdges]
   );
 
   const handleAddNode = useCallback(() => {
-    const newNode = {
+    const newNode: Node<ServiceNodeData> = {
       id: `node-${Date.now()}`,
       type: 'service',
       position: { x: Math.random() * 400 + 100, y: Math.random() * 300 + 100 },
       data: {
         label: 'New Service',
-        status: 'healthy' as const,
+        status: 'healthy',
         cpu: 0,
         memory: 0,
         requests: 0,
@@ -164,7 +164,6 @@ export function Canvas() {
         />
       </ReactFlow>
 
-      {/* Add Node Button */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -172,13 +171,11 @@ export function Canvas() {
         onClick={handleAddNode}
         className="absolute top-6 left-6 z-10 w-10 h-10 rounded-lg bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/30 flex items-center justify-center transition-all hover:scale-105 active:scale-95"
       >
-        <Plus className="w-5 h-5 text-white" />
+        <span className="text-white text-xl">+</span>
       </motion.button>
 
-      {/* Floating Toolbar */}
       <Toolbar />
 
-      {/* Inspector Panel */}
       {selectedNode && (
         <NodeInspector 
           node={selectedNode} 
